@@ -76,9 +76,11 @@ Taller.
     b.  Puede utilizarse el método join() de la clase Thread para sincronizar el hilo que inicia la carrera, con la finalización de los hilos de los galgos.
 
    - Antes de corrección:
+     
         ![](img/parte2/1a1.png)
         ![](img/parte2/1a11.png)
    - Después de correción:
+     
         ![](img/parte2/1a2.png)
         ![](img/parte2/1a22.png)
 
