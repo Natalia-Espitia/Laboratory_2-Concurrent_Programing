@@ -106,29 +106,65 @@ Taller.
     Partes del Código:
 
     ![](img/parte2/2_2.png)
+    
     ![](img/parte2/2_3.png)
 
 3.  Utilice un mecanismo de sincronización para garantizar que a dichas
     regiones críticas sólo acceda un hilo a la vez. Verifique los
     resultados.
 
+    - En RegistroLLegada: se uso synchronized en RegistroLlegada para convertir toda la operación en un solo método atómico.
+
+    ![](img/parte2/2_4.png)
+
+    - En Galgo: llamamos ese método una única vez al llegar.
+
+    ![](img/parte2/2_5.png)
+
+    - Ejecución después de cambios:
+
+    ![](img/parte2/2_6.png)
+
 4.  Implemente las funcionalidades de pausa y continuar. Con estas,
     cuando se haga clic en ‘Stop’, todos los hilos de los galgos
     deberían dormirse, y cuando se haga clic en ‘Continue’ los mismos
     deberían despertarse y continuar con la carrera. Diseñe una solución que permita hacer esto utilizando los mecanismos de sincronización con las primitivas de los Locks provistos por el lenguaje (wait y notifyAll).
 
+    La solución propuesta será la siguiente:
+    - Crear un objeto monitor compartido (pausaLock) que será usado para coordinar wait() y notifyAll().
+    - En cada Galgo, dentro del ciclo de avance (corra()), verificar si la carrera está en pausa: Si está en pausa → wait() hasta que otro hilo haga notifyAll().
+    - En MainCanodromo, los botones Stop y Continue actualizarán un flag (enPausa) y notificarán a todos los hilos.
+
+    Se creo la clase EstadoCarrera con una bandera llamada enPausa la cual se comparte entre los hilos de forma segura.
+
+    ![](img/parte2/2_7.png)
+
+    MainCanodromo: Pasamos el pausaLock y el estadoCarrera a cada galgo, además configuramos los botones Stop y Continue.
+
+    ![](img/parte2/2_8.png)
+    ![](img/parte2/2_9.png)
+    ![](img/parte2/2_10.png)
+
+    Galgo: se pasaron los nuevos atributos, se hace la verificación de pausa, si es correcta, el galgo se duerme sino avanza normalmente.
+
+    ![](img/parte2/2_11.png)
+
+    Ejecución despúes de las implementaciones de las funcionalidades de pausa y continuar:
+
+    ![](img/parte2/2_12.png)
+    ![](img/parte2/2_13.png)
+    ![](img/parte2/2_14.png)
 
 ## Criterios de evaluación
 
 1. Funcionalidad.
 
-    1.1. La ejecución de los galgos puede ser detenida y resumida consistentemente.
-    
-    1.2. No hay inconsistencias en el orden de llegada registrado.
+1.1. La ejecución de los galgos puede ser detenida y resumida consistentemente.
+
+1.2. No hay inconsistencias en el orden de llegada registrado.
     
 2. Diseño.   
 
     2.1. Se hace una sincronización de sólo la región crítica (sincronizar, por ejemplo, todo un método, bloquearía más de lo necesario).
     
     2.2. Los galgos, cuando están suspendidos, son reactivados son sólo un llamado (usando un monitor común).
-
